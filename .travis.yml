@@ -8,3 +8,9 @@ php:
 
 install:
   - composer install
+
+script:
+  - vendor/bin/phpunit --coverage-clover xml/clover.xml
+
+after_success:
+  - php vendor/bin/coveralls --coverage_clover=xml/clover.xml
