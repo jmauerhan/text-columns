@@ -40,21 +40,10 @@ class FormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedOutput, $formatter->format());
     }
 
-    public function getNewLines()
-    {
-        return [
-            ["\n"],
-            ["\r\n"]
-        ];
-    }
-
-    /**
-     * @dataProvider getNewLines
-     */
-    public function testFormatReturnsExtraRowsWhenValuesAreMultiline($newLineValue)
+    public function testFormatReturnsExtraRowsWhenValuesAreMultiline()
     {
         $input = [
-            ['aaa', 'first line' . $newLineValue . 'second line'],
+            ['aaa', 'first line' . PHP_EOL . 'second line'],
             ['ccccc', 'dd']
         ];
         $expectedOutput = [
@@ -134,6 +123,29 @@ class FormatterTest extends \PHPUnit_Framework_TestCase
         $formatter->setMaxColumnWidth($width);
         $actualResult = $formatter->format();
         $this->assertEquals($expectedOutput, $actualResult);
+    }
+
+    public function testMaxColumnWidthWithForcedBreak()
+    {
+        $width = 5;
+
+        $input = [
+            ['123456789']
+        ];
+        $expectedOutput = [
+            ['12345'],
+            ['6789 '],
+        ];
+
+        $formatter = new Formatter($input);
+        $formatter->setMaxColumnWidth($width);
+        $actualResult = $formatter->format();
+        $this->assertEquals($expectedOutput, $actualResult);
+    }
+
+    public function testMaxTotalWidth()
+    {
+
     }
 
 }
