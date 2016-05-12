@@ -16,22 +16,29 @@ class Formatter
     /** @var int[] */
     private $columnWidths;
 
+    private $maxColumnWidth;
+
     public function __construct(array $originalData)
     {
-        $newLinePattern = '/\n/';
-        $rows = [];
-        foreach ($originalData AS $rowNum => $row) {
-            $newRows = [];
-            foreach ($row AS $col => $val) {
-                $valToRows = preg_split($newLinePattern, $val);
+        $this->originalData = $originalData;
+    }
 
-                foreach ($valToRows AS $numNewRows => $subRow) {
-                    $newRows[$numNewRows][$col] = trim($subRow);
+    private function indexData()
+    {
+        $pattern = '/.{1,' . $this->maxColumnWidth . '}(?=\b)\W*/';
+        $rows = [];
+        foreach ($this->originalData AS $row) {
+            $extraRows = [];
+            foreach ($row AS $col => $cellData) {
+                $cellData = trim($cellData);
+                preg_match_all($pattern, $cellData, $splitValue);
+                foreach ($splitValue[0] AS $rowNum => $subRow) {
+                    $extraRows[$rowNum][$col] = trim($subRow);
                 }
             }
-            $rows = array_merge($rows, $newRows);
+            ksort($extraRows);
+            $rows = array_merge($rows, $extraRows);
         }
-
         $this->indexedData = $rows;
 
         $this->numColumns = max(array_map('count', $this->getData()));
@@ -42,11 +49,18 @@ class Formatter
             $this->columnWidths[$i] = $maxLen;
         }
 
-        $this->originalData = $originalData;
+    }
+
+    public function setMaxColumnWidth($maxWidth)
+    {
+        $this->maxColumnWidth = $maxWidth;
     }
 
     public function getData()
     {
+        if (empty($this->indexedData)) {
+            $this->indexData();
+        }
         return $this->indexedData;
     }
 

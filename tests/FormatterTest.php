@@ -7,13 +7,9 @@ use JMauerhan\TextColumns\Formatter;
 /**
  * Class FormatterTest
  * @package Test
- * @coversDefaultClass Jmauerhan\TextColumns\Formatter
  */
 class FormatterTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @covers ::format
-     */
     public function testFormatReturnsPaddedValues()
     {
         $input = [
@@ -29,9 +25,6 @@ class FormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedOutput, $formatter->format());
     }
 
-    /**
-     * @covers ::format
-     */
     public function testFormatPadsWhenRowsHaveDifferentColumnCount()
     {
         $input = [
@@ -57,7 +50,6 @@ class FormatterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getNewLines
-     * @covers ::format
      */
     public function testFormatReturnsExtraRowsWhenValuesAreMultiline($newLineValue)
     {
@@ -72,6 +64,31 @@ class FormatterTest extends \PHPUnit_Framework_TestCase
         ];
 
         $formatter = new Formatter($input);
+        $actualResult = $formatter->format();
+        $this->assertEquals($expectedOutput, $actualResult);
+    }
+
+    public function testFormatWithMaxColumnWidthWrapsLongCellsInColumn()
+    {
+        $width = 60;
+
+        $longStr = 'This is a very long line. It has a lot of text. It will need to wrap. ';
+        $longStr .= 'If the very long line of text wraps and is not padded to the right column, ';
+        $longStr .= 'then the columns won\'t line up correctly.';
+        $input = [
+            ['-long', $longStr],
+            ['-short', 'short text']
+        ];
+        $expectedOutput = [
+            ['-long ', 'This is a very long line. It has a lot of text. It will need'],
+            ['      ', 'to wrap. If the very long line of text wraps and is not     '],
+            ['      ', "padded to the right column, then the columns won't line up  "],
+            ['      ', 'correctly.                                                  '],
+            ['-short', 'short text                                                  ']
+        ];
+
+        $formatter = new Formatter($input);
+        $formatter->setMaxColumnWidth($width);
         $actualResult = $formatter->format();
         $this->assertEquals($expectedOutput, $actualResult);
     }
