@@ -26,6 +26,6 @@ foreach($output AS $row){
 Output:
 ```
 | aaa   | bbbbbbb |
-| ccccc | dd |    |
+| ccccc | dd      |
 ```
 
