@@ -7,7 +7,7 @@ use JMauerhan\TextColumns\Formatter;
 /**
  * Class FormatterTest
  * @package Test
- * @covers Jmauerhan\TextColumns\Formatter
+ * @coversDefaultClass Jmauerhan\TextColumns\Formatter
  */
 class FormatterTest extends \PHPUnit_Framework_TestCase
 {
