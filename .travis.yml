@@ -8,6 +8,8 @@ php:
 
 install:
   - composer install
+  #coveralls needs this dir.
+  - mkdir -p build/logs
 
 script:
   - vendor/bin/phpunit --coverage-clover xml/clover.xml
