@@ -7,6 +7,9 @@ class Formatter
     /** @var array */
     private $originalData;
 
+    /** @var array */
+    private $indexedData;
+
     /** @var int */
     private $numColumns;
 
@@ -15,14 +18,36 @@ class Formatter
 
     public function __construct(array $originalData)
     {
-        $this->originalData = $originalData;
-        $this->numColumns = max(array_map('count', $this->originalData));
+        $newLinePattern = '/\n/';
+        $rows = [];
+        foreach ($originalData AS $rowNum => $row) {
+            $newRows = [];
+            foreach ($row AS $col => $val) {
+                $valToRows = preg_split($newLinePattern, $val);
+
+                foreach ($valToRows AS $numNewRows => $subRow) {
+                    $newRows[$numNewRows][$col] = trim($subRow);
+                }
+            }
+            $rows = array_merge($rows, $newRows);
+        }
+
+        $this->indexedData = $rows;
+
+        $this->numColumns = max(array_map('count', $this->getData()));
         $this->columnWidths = [];
         for ($i = 0; $i < $this->numColumns; $i++) {
-            $column = array_column($this->originalData, $i);
+            $column = array_column($this->getData(), $i);
             $maxLen = max(array_map('strlen', $column));
             $this->columnWidths[$i] = $maxLen;
         }
+
+        $this->originalData = $originalData;
+    }
+
+    public function getData()
+    {
+        return $this->indexedData;
     }
 
     /**
@@ -31,7 +56,7 @@ class Formatter
     public function format()
     {
         $formattedValues = [];
-        foreach ($this->originalData AS $row) {
+        foreach ($this->getData() AS $row) {
             $paddedRow = [];
             foreach ($this->columnWidths AS $col => $width) {
                 if (empty($row[$col])) {
