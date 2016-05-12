@@ -95,6 +95,30 @@ class FormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testMaxColumnWidthWrapsEveryColumn()
     {
+        $width = 40;
+
+        $longStr = 'This is a very long line. It has a lot of text. ' . PHP_EOL;
+        $longStr .= 'It also has a line break.';
+
+        $input = [
+            ['long', $longStr],
+            ['short', 'short string']
+        ];
+        $expectedOutput = [
+            ['long ', 'This is a very long line. It has a lot'],
+            ['     ', 'of text.                              '],
+            ['     ', 'It also has a line break.             '],
+            ['short', 'short string                          ']
+        ];
+
+        $formatter = new Formatter($input);
+        $formatter->setMaxColumnWidth($width);
+        $actualResult = $formatter->format();
+        $this->assertEquals($expectedOutput, $actualResult);
+    }
+
+    public function testMaxColumnWidthWithNewLineBreak()
+    {
         $width = 10;
 
         $input = [
