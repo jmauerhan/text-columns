@@ -93,4 +93,23 @@ class FormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedOutput, $actualResult);
     }
 
+    public function testMaxColumnWidthWrapsEveryColumn()
+    {
+        $width = 10;
+
+        $input = [
+            ['A string, a string, a string', 'Some other string of text']
+        ];
+        $expectedOutput = [
+            ['A string,', 'Some other'],
+            ['a string,', 'string of '],
+            ['a string ', 'text      ']
+        ];
+
+        $formatter = new Formatter($input);
+        $formatter->setMaxColumnWidth($width);
+        $actualResult = $formatter->format();
+        $this->assertEquals($expectedOutput, $actualResult);
+    }
+
 }
