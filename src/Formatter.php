@@ -1,6 +1,6 @@
 <?php
 
-namespace Jmauerhan\TextColumns;
+namespace JMauerhan\TextColumns;
 
 class Formatter
 {

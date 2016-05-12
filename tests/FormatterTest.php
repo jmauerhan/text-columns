@@ -2,7 +2,7 @@
 
 namespace Test;
 
-use Jmauerhan\TextColumns\Formatter;
+use JMauerhan\TextColumns\Formatter;
 
 /**
  * Class FormatterTest

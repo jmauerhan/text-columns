@@ -16,8 +16,8 @@
   },
   "autoload": {
     "psr-4": {
-      "Jmauerhan\\TextColumns\\": "src/",
-      "Jmauerhan\\TextColumns\\Test\\": "tests/"
+      "JMauerhan\\TextColumns\\": "src/",
+      "Test\\": "tests/"
     }
   }
 }
