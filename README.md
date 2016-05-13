@@ -1,6 +1,8 @@
 # text-columns
 Converts an array of strings into a padded table suitable for monospaced output
 
+[![Build Status](https://travis-ci.org/jmauerhan/text-columns.svg?branch=master)](https://travis-ci.org/jmauerhan/text-columns) [![Coverage Status](https://coveralls.io/repos/github/jmauerhan/text-columns/badge.svg?branch=master)](https://coveralls.io/github/jmauerhan/text-columns?branch=master) 
+
 Given an array of strings, this class will return an array with the strings padded and broken into multiple rows for any multi-line value. The resulting array can be output in a monospaced font (such as the classic terminal) and will be nicely formatted in evenly spaced columns.
 
 ## Usage
