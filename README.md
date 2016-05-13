@@ -11,17 +11,20 @@ Create a `Formatter` with an array, then call `format` to convert it to a padded
  
 ```
 $input = [
-            ['aaa', 'bbbbbbb'],
-            ['ccccc', 'dd']
-        ];
+  ['aaa', 'bbbbbbb'],
+  ['ccccc', 'dd']
+];
 
 $formatter = new Formatter($input);
 $output = $formatter->format();
+```
 
+You can now print the array however you like. The examples in this file are using a pipe separator to demonstrate the padding added by the formatter.
+```
+$sep = '|';
 foreach($output AS $row){
-  echo '| ';
-  echo implode(' | ', $row);
-  echo ' |'.PHP_EOL;_
+  $output = implode(" {$sep} ", $row);
+  echo "{$sep} {$output} {$sep}".PHP_EOL;
 }
 ```
 
@@ -31,3 +34,50 @@ Output:
 | ccccc | dd      |
 ```
 
+
+### Wrapping
+The formatter handles wrapping cells that have multi-line data, or exceed a set width.
+
+#### Line Breaks
+```
+$input = [
+  ['command', 'This is a description '.PHP_EOL.'which spans multiple lines.'],
+  ['data', 'This is a short line']
+];
+
+$formatter = new Formatter($input);
+$output = $formatter->format();
+```
+
+Output:
+```
+| command | This is a description       |
+|         | which spans multiple lines. |
+| data    | This is a short line        |
+```
+
+#### Maximum Width - set to 20
+```
+$input = [
+  ['command', 'This is a description '.PHP_EOL.'which spans multiple lines.'],
+  ['data', 'This is a shorter line'],
+  ['random', 'Some data: 1293847y3hwedfjsoidf87e3y6t2wusjdhhf']
+];
+
+$formatter = new Formatter($input);
+$formatter->setMaxColumnWidth(20)
+$output = $formatter->format();
+```
+
+Output: (The column wraps at the max width, using word boundaries to prevent breaking a word if possible, and also at the pre-existing line breaks.)
+```
+| command | This is a           |
+|         | description which   |
+|         | spans multiple      |
+|         | lines.              |
+| data    | This is a shorter   |
+|         | line                |
+| random  | Some data:          |
+|         | 1293847y3hwedfjsoid |
+|         | f87e3y6t2wusjdhhf   |
+```
